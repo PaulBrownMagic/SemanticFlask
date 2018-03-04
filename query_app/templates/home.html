@@ -1,0 +1,44 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+{{ super() }}
+<link href="{{ url_for('static', filename='css/blog.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+SPARQL Query
+{% endblock %}
+
+{% block content %}
+{% include "includes/flashmodal.html" %}
+<div class="container">
+    <div class="blog-header">
+      <div class="container">
+        <h1 class="blog-title">The Flask+RDFLib SPARQL App</h1>
+        <p class="lead blog-description">Query your data.</p>
+      </div>
+      <p> The following namespaces are initialised:</p>
+      <ul class="list-group">{% for k, v in namespaces.items() %}
+          <li class="list-group-item">{{ k }}: {{ v }}</li>
+          {% endfor -%}
+      </ul>
+    </div>
+{% include "includes/query_form.html" %}
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{% include "includes/footer.html" %}
+{{ super () }}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#errorModal').modal('show');
+    });
+</script>
+{% endif %}
+{% endwith %}
+{% endblock %}

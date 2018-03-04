@@ -1,0 +1,11 @@
+<div class="container">
+    <form method="POST" action="/" class="form" role="form">
+        {{ form.csrf_token }}
+        <div class="form-group  required">
+            {{ form.query.label(class="control-label") }}
+            {{ form.query(rows=10, class="form-control") }}
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Submit">
+   </form>
+</div>
