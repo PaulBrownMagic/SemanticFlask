@@ -7,7 +7,7 @@ data.
 ## Requirements
 
 Requirements are all
-Python3.44444444444444444444444444444444444444444444+ and can be installed with pipenv. If you
+Python3.4+ and can be installed with pipenv. If you
 don't have pipenv yet, install that first. The last command here activates your
 virtual environment. The top-level dependencies are Flask, Flask-WTF,
 Flask-Bootstrap, BeautifulSoup4, RDFLib and requests.
