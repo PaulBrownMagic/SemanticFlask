@@ -16,11 +16,11 @@ SPARQL Query
     <div class="blog-header">
       <div class="container">
         <h1 class="blog-title">The Flask+RDFLib SPARQL App</h1>
-        <p class="lead blog-description">Query your data.</p>
+        <p class="lead blog-description">Query all the data.</p>
       </div>
       <p> The following namespaces are initialised:</p>
       <ul class="list-group">{% for k, v in namespaces.items() %}
-          <li class="list-group-item">{{ k }}: {{ v }}</li>
+        <li class="list-group-item">{{ k }}: <a href="{{ v }}" target="_blank">{{ v }}</a></li>
           {% endfor -%}
       </ul>
     </div>

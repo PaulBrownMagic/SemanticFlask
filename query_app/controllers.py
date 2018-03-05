@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """Routes for app."""
+from functools import partial
+from itertools import chain
+
 from bs4 import BeautifulSoup
 from flask import render_template, request, flash
 from requests import post, codes
@@ -18,7 +21,7 @@ graph = Graph()
 def abbreviate(url):
     for abbr, ns in NAMESPACES.items():
         if str(ns) in url:
-            return url.replace(str(ns), f"{abbr}:")
+            return url.replace(str(ns), "{}:".format(abbr))
     return url
 
 
@@ -33,15 +36,24 @@ def home_page():
 @app.route("/", methods=["POST"])
 def result_page():
     """Render the query result."""
-    if not SPARQLform().validate_on_submit():
+    form = SPARQLform()
+    if not form.validate_on_submit():
+        errors = chain.from_iterable(
+            (
+                map(partial("{}. {}".format, field.title()), errs) for
+                field, errs in form.errors.items()
+            )
+        )
         flash("Invalid Query")
+        for err in errors:
+            flash(err)
         return home_page()
     query = request.form.get('query')
     try:
         results = graph.query(query)
     except Exception as e:
         flash("Could not run that query.")
-        flash(f"RDFLIB Error: {e}")
+        flash("RDFLIB Error: {}".format(e))
         sparql_validate(query)
         return home_page()
     return render_template("result.html",
@@ -51,12 +63,14 @@ def result_page():
 
 
 def sparql_validate(query):
-    prefixes = "\n".join((f"PREFIX {ns}: <{uri}>" for ns, uri in NAMESPACES.items()))
+    prefix = "PREFIX {}: <{}>".format
+    prefixes = "\n".join((prefix(ns, uri) for ns, uri in NAMESPACES.items()))
     query = prefixes + "\n\n" + query
-    data = {"query": query}
-    resp = post("http://sparql.org/validate/query", data=data)
+    resp = post("http://sparql.org/validate/query", data=dict(query=query))
     if resp.status_code == codes.ok:
         soup = BeautifulSoup(resp.content.decode('utf-8'), "html.parser")
         pres = soup.find_all('pre')
         for p in pres:
             flash(p)
+    else:
+        flash("Unable to access query validation service.")

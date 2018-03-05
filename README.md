@@ -48,12 +48,26 @@ local Python application, not a production system. Beware, it is possible to cra
 the application with a query that'll return many, many triples.
 
 
-### An example query:
+### Example queries:
 This will return all the instances (?subject) of all the classes (?object).
 
 ```sparql
 SELECT ?subject ?object
 WHERE {
     ?subject rdf:type ?object .
+}
+```
+
+The default config file is set to injest my foaf.rdf file, which is
+hosted online. You can run queries on the data using the foaf prefix.
+In this query we also use `a`, which is equivalent to `rdf:type`.
+
+```sparql
+SELECT ?person ?title ?name ?blog
+WHERE {
+    ?person a foaf:Person.
+    ?person foaf:title ?title.
+    ?person foaf:name ?name.
+    ?person foaf:weblog ?blog.
 }
 ```
