@@ -18,11 +18,14 @@ graph = Graph()
 
 
 @app.template_filter('namespace')
-def abbreviate(url):
+def abbreviate(data):
+    if data is None:
+        return ""
     for abbr, ns in NAMESPACES.items():
-        if str(ns) in url:
-            return url.replace(str(ns), "{}:".format(abbr))
-    return url
+        if str(ns) in data:
+            n = data.replace(str(ns), "{}:".format(abbr))
+            return '<a href="{url}" title="{n}">{n}</a>'.format(url=data, n=n)
+    return data
 
 
 @app.route("/", methods=["GET"])

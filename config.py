@@ -19,7 +19,7 @@ NAMESPACES = dict(rdf=RDF,
                   dc=DC,
                   dcterms=DCTERMS,
                   swivt=Namespace("http://semantic-mediawiki.org/swivt/1.0#"),
-                  pbmfoaf=Namespace("http://www.paulbrownmagic.com/foaf.rdf"),
+                  pbmfoaf=Namespace("http://www.paulbrownmagic.com/foaf.rdf#"),
                   )
 
 # Path to Directory containing RDF data.

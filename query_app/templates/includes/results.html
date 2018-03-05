@@ -1,11 +1,11 @@
-<div class="container">
+<div class="container" id="results">
 <table class="table table-striped table-bordered table-hover">
     <thead class="thead-inverse">
         <tr><th>#</th>{% for v in results.vars %}<th>{{ v }}</th>{% endfor %}</tr>
     </thead>
     <tbody>
         {% for r in results %}
-        <tr><th scope="row">{{ loop.index }}</th>{% for d in r %}<td><a href="{{ d }}" title="{{ d }}">{{ d|namespace }}</a></td>{% endfor %}</tr>
+        <tr><th scope="row">{{ loop.index }}</th>{% for d in r %}<td>{{ d|namespace|safe }}</td>{% endfor %}</tr>
         {% endfor %}
     </tbody>
 </table>
