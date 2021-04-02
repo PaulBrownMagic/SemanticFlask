@@ -3,12 +3,13 @@
 
 """Automatic injesting of data to rdflib.Graph."""
 
-import os
 from itertools import chain
+import os
+from pathlib import Path
 
 import rdflib
 
-from config import BASE_DIR, RDF_DIR, NAMESPACES, RDF_URLS
+from config import RDF_DIR, NAMESPACES, RDF_URLS, PARSERS
 
 
 def get_files(rootdirfiles):
@@ -18,8 +19,7 @@ def get_files(rootdirfiles):
 
 def is_rdf_file(filename):
     """Only injests rdf files."""
-    postfix = filename.split(".")[-1]
-    return postfix in ["rdf", "n3", "ttl", "xml"]
+    return filename.suffix in PARSERS.keys()
 
 
 class Graph(rdflib.Graph):
@@ -30,10 +30,12 @@ class Graph(rdflib.Graph):
         super().__init__(*args, **kwargs)
         for ns, uri in NAMESPACES.items():
             self.bind(ns, uri)
-        files_in_dir = chain.from_iterable(map(get_files, os.walk(RDF_DIR)))
+        files_in_dir = map(
+            Path, chain.from_iterable(map(get_files, os.walk(RDF_DIR)))
+        )
         for rdf_file in filter(is_rdf_file, files_in_dir):
             print("Parsing: ", rdf_file)
-            self.parse(rdf_file)
+            self.parse(str(rdf_file), format=PARSERS[rdf_file.suffix])
         for url in RDF_URLS:
             print("Parsing: ", url)
             self.parse(url)
